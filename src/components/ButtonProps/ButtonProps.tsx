@@ -1,8 +1,20 @@
 import React from 'react';
 import './ButtonProps.css';
 
-const ButtonProps = () => {
-    return <button className="my-button2">Click2</button>;
+const ButtonProps = (
+    {
+        color = 'blue', 
+        disabled, 
+        children,
+        onClick,
+    }: 
+    {
+        color?:string, 
+        disabled?: boolean,
+        children: React.ReactNode,
+        onClick: () => void;
+    }) => {
+    return <button onClick={onClick} disabled={disabled} style = {{color:color}}>{children}</button>;
 };
 
 export default ButtonProps;
