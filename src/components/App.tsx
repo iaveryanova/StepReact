@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import Button from "./Button/Button";
 import ButtonProps from './ButtonProps/ButtonProps';
+import Counter from './Counter/Counter';
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <h1>My React App</h1>
       <Button/>
       <ButtonProps/>
+      <Counter/>
     </div>
   );
 }
