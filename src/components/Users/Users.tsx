@@ -11,7 +11,9 @@ const Users: FC = () => {
         }
     };
     const searchUser = (userName: string) => {
-
+        setUsers(USERS.filter(user => user.name.toLowerCase().indexOf(userName.toLowerCase()) !== -1));
+    
+        
     };
     return (
         <>
