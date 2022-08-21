@@ -4,17 +4,22 @@ import {IUser} from "./IUser";
 
 const Users: FC = () => {
     const [users, setUsers] = useState<IUser[]>(USERS);
+    const [search, setSearch] = useState('');
     const deleteUser = (id: number) => {
         const isDelete = window.confirm("Do you really delete this user?");
         if (isDelete) {
             setUsers(users.filter(user => user.id !== id));
         }
     };
-    const searchUser = (userName: string) => {
-        setUsers(USERS.filter(user => user.name.toLowerCase().indexOf(userName.toLowerCase()) !== -1));
-    
+    const searchedUsers = () => {
         
+        if (search) {
+            return users.filter(user => user.name.toLowerCase().includes(search.toLowerCase()));
+        }
+        return users;
     };
+    console.log(searchedUsers());
+
     return (
         <>
             <div className="input-group mb-3">
@@ -24,13 +29,13 @@ const Users: FC = () => {
                        placeholder="Username"
                        aria-label="Username"
                        aria-describedby="basic-addon1"
-                       onChange={(event) => searchUser(event.target.value)}
+                       onChange={(event) => setSearch(event.target.value)}
                 />
             </div>
             <div className="row row-cols-1 row-cols-md-3 g-4">
                 {users.length
                     ?
-                    users.map(user =>
+                    searchedUsers().map(user =>
                         <div className="col" key={user.id}>
                             <div className="card h-100">
                                 <div className="card-body">
