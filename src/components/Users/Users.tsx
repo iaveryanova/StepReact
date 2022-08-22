@@ -34,7 +34,7 @@ const Users: FC = () => {
     };
     return (
         <>
-            <div className="input-gr oup mb-3">
+            <div className="input-group mb-3">
                 <span className="input-group-text" id="basic-addon1">Search</span>
                 <input type="text"
                        className="form-control"
