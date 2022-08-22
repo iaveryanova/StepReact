@@ -1,8 +1,8 @@
 import React, { ChangeEvent, FC, useMemo, useState, FormEvent, useEffect } from 'react';
 import { IUser } from './IUser';
 import { initialUser } from './initialUser';
-import axios from 'axios';
 import Loader from '../Loader';
+import http from '../../http';
 
 const Users: FC = () => {
   const [user, setUser] = useState(initialUser);
@@ -24,7 +24,7 @@ useEffect(() => {
   const getUsers = async () => {
     console.log('function getusers work');
     try {
-        const users = await axios.get('https://jsonplaceholder.typicode.com/users');
+        const users = await http.get('users');
         setUsers(users.data);
     } catch (e) {
         console.log(e);
@@ -50,10 +50,19 @@ useEffect(() => {
     const newValue = event.target.value;
     setUser({ ...user, [field]: newValue });
   };
-  const addUser = (event: FormEvent) => {
+
+  const addUser = async (event: FormEvent) => {
     event.preventDefault();
-    setUsers([...users, user]);
-    setUser(initialUser);
+    try {
+        const addedUser = await http.post('users', user);
+        if (addedUser.data) {
+            setUsers([...users, user]);
+            setUser(initialUser);
+        }
+    } catch (e) {
+        console.log(e);
+    }
+    
   };
   return (
     <>
@@ -80,8 +89,7 @@ useEffect(() => {
       {showUserForm && (
         <form onSubmit={(event) => addUser(event)}>
           {Object.keys(user).map((field) => {
-            if (field === 'id' || field === 'address' || field === 'company') 
-              return;
+            if (field === 'id' || field === 'address' || field === 'company') return null;
             return (
               <div className='mb-3' key={field}>
                 <label htmlFor={field} className='form-label'>
