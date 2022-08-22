@@ -1,15 +1,24 @@
-import React, { ChangeEvent, FC, useMemo, useState, FormEvent } from "react";
-import { USERS } from "./usersData";
-import { IUser } from "./IUser";
-import { initialUser } from "./initialUser";
+import React, { ChangeEvent, FC, useMemo, useState, FormEvent } from 'react';
+import { USERS } from './usersData';
+import { IUser } from './IUser';
+import { initialUser } from './initialUser';
+import axios from 'axios';
 
 const Users: FC = () => {
   const [user, setUser] = useState(initialUser);
   const [users, setUsers] = useState<IUser[]>(USERS);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const [showUserForm, setShowUserForm] = useState(false);
+
+  const getUsers = () => {
+    const users = axios.get('https://jsonplaceholder.typicode.com/users').then(response => {
+        console.log(response.data);
+    });
+    console.log(users);
+  };
+
   const deleteUser = (id: number) => {
-    const isDelete = window.confirm("Do you really delete this user?");
+    const isDelete = window.confirm('Do you really delete this user?');
     if (isDelete) {
       setUsers(users.filter((user) => user.id !== id));
     }
@@ -35,21 +44,26 @@ const Users: FC = () => {
   };
   return (
     <>
-      <div className="input-group mb-3">
-        <span className="input-group-text" id="basic-addon1">
+      <div className='input-group mb-3'>
+        <span className='input-group-text' id='basic-addon1'>
           Search
         </span>
         <input
-          type="text"
-          className="form-control"
-          placeholder="Username"
-          aria-label="Username"
-          aria-describedby="basic-addon1"
+          type='text'
+          className='form-control'
+          placeholder='Username'
+          aria-label='Username'
+          aria-describedby='basic-addon1'
           onChange={(event) => setSearch(event.target.value)}
         />
       </div>
+
+      <button className='btn btn-primary' onClick={() => getUsers()}>
+        Fetch Users
+      </button>
+
       <button
-        className="btn btn-success mt-3 mb-3"
+        className='btn btn-success mt-3 mb-3'
         onClick={() => setShowUserForm(!showUserForm)}
       >
         Add New User
@@ -57,21 +71,21 @@ const Users: FC = () => {
       {showUserForm && (
         <form onSubmit={(event) => addUser(event)}>
           {Object.keys(user).map((field) => {
-            if (field === "id" || field === "address" || field === "company")
+            if (field === 'id' || field === 'address' || field === 'company')
               return;
             return (
-              <div className="mb-3" key={field}>
-                <label htmlFor={field} className="form-label">
+              <div className='mb-3' key={field}>
+                <label htmlFor={field} className='form-label'>
                   {field}
                 </label>
                 <input
-                  type="text"
-                  className="form-control"
+                  type='text'
+                  className='form-control'
                   id={field}
                   required
                   value={
                     user[
-                      field as keyof Omit<IUser, "id" | "address" | "company">
+                      field as keyof Omit<IUser, 'id' | 'address' | 'company'>
                     ]
                   }
                   onChange={(event) => onChange(event)}
@@ -80,25 +94,25 @@ const Users: FC = () => {
             );
           })}
 
-          <button type="submit" className="btn btn-primary">
+          <button type='submit' className='btn btn-primary'>
             Add
           </button>
         </form>
       )}
-      <div className="row row-cols-1 row-cols-md-3 g-4">
+      <div className='row row-cols-1 row-cols-md-3 g-4'>
         {searchedUsers.length ? (
           searchedUsers.map((user) => (
-            <div className="col" key={user.id}>
-              <div className="card h-100">
-                <div className="card-body">
-                  <h5 className="card-title">{`№${user.id} - ${user.name}`}</h5>
-                  <p className="card-text">Email: {user.email}</p>
-                  <p className="card-text">Phone: {user.phone}</p>
-                  <p className="card-text">Website: {user.website}</p>
+            <div className='col' key={user.id}>
+              <div className='card h-100'>
+                <div className='card-body'>
+                  <h5 className='card-title'>{`№${user.id} - ${user.name}`}</h5>
+                  <p className='card-text'>Email: {user.email}</p>
+                  <p className='card-text'>Phone: {user.phone}</p>
+                  <p className='card-text'>Website: {user.website}</p>
                 </div>
-                <div className="card-footer">
+                <div className='card-footer'>
                   <button
-                    className="btn btn-danger"
+                    className='btn btn-danger'
                     onClick={() => deleteUser(user.id)}
                   >
                     Delete
