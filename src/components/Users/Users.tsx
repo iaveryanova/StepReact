@@ -1,21 +1,35 @@
-import React, { ChangeEvent, FC, useMemo, useState, FormEvent } from 'react';
-import { USERS } from './usersData';
+import React, { ChangeEvent, FC, useMemo, useState, FormEvent, useEffect } from 'react';
 import { IUser } from './IUser';
 import { initialUser } from './initialUser';
 import axios from 'axios';
+import Loader from '../Loader';
 
 const Users: FC = () => {
   const [user, setUser] = useState(initialUser);
-  const [users, setUsers] = useState<IUser[]>(USERS);
+  const [users, setUsers] = useState<IUser[]>([]);
   const [search, setSearch] = useState('');
   const [showUserForm, setShowUserForm] = useState(false);
 
-  const getUsers = () => {
-    const users = axios.get('https://jsonplaceholder.typicode.com/users').then(response => {
-        console.log(response.data);
-    });
-    console.log(users);
-  };
+useEffect(() => {
+    getUsers();
+}, []);
+
+
+// if deps not used rerender on every change state
+// if deps empty - rerender at firsr load
+// if deps state - rerender onChange this state
+// if in useEffect used return - unmount
+
+
+  const getUsers = async () => {
+    console.log('function getusers work');
+    try {
+        const users = await axios.get('https://jsonplaceholder.typicode.com/users');
+        setUsers(users.data);
+    } catch (e) {
+        console.log(e);
+    }
+  }
 
   const deleteUser = (id: number) => {
     const isDelete = window.confirm('Do you really delete this user?');
@@ -31,7 +45,6 @@ const Users: FC = () => {
     }
     return users;
   }, [search, users]);
-  console.log(searchedUsers);
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
     const field = event.target.id;
     const newValue = event.target.value;
@@ -58,10 +71,6 @@ const Users: FC = () => {
         />
       </div>
 
-      <button className='btn btn-primary' onClick={() => getUsers()}>
-        Fetch Users
-      </button>
-
       <button
         className='btn btn-success mt-3 mb-3'
         onClick={() => setShowUserForm(!showUserForm)}
@@ -71,7 +80,7 @@ const Users: FC = () => {
       {showUserForm && (
         <form onSubmit={(event) => addUser(event)}>
           {Object.keys(user).map((field) => {
-            if (field === 'id' || field === 'address' || field === 'company')
+            if (field === 'id' || field === 'address' || field === 'company') 
               return;
             return (
               <div className='mb-3' key={field}>
@@ -122,7 +131,7 @@ const Users: FC = () => {
             </div>
           ))
         ) : (
-          <h2>Users not exist</h2>
+          <Loader />
         )}
       </div>
     </>
