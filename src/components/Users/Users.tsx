@@ -1,8 +1,10 @@
-import React, {ChangeEvent, FC, useMemo, useState} from 'react';
+import React, {ChangeEvent, FC, useMemo, useState, FormEvent} from 'react';
 import {USERS} from "./usersData";
 import {IUser} from "./IUser";
+import {initialUser} from './initialUser';
 
 const Users: FC = () => {
+    const [user, setUser] = useState(initialUser);
     const [users, setUsers] = useState<IUser[]>(USERS);
     const [search, setSearch] = useState('');
     const [showUserForm, setShowUserForm] = useState(false);
@@ -20,10 +22,19 @@ const Users: FC = () => {
         return users;
     }, [search, users]); 
     console.log(searchedUsers);
-
+    const onChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const field = event.target.id;
+        const newValue = event.target.value;
+        setUser({...user, [field]: newValue});
+    };
+    const addUser = (event: FormEvent) => {
+        event.preventDefault();
+        setUsers([...users, user]);
+        setUser(initialUser);
+    };
     return (
         <>
-            <div className="input-group mb-3">
+            <div className="input-gr oup mb-3">
                 <span className="input-group-text" id="basic-addon1">Search</span>
                 <input type="text"
                        className="form-control"
@@ -39,12 +50,23 @@ const Users: FC = () => {
                 Add New User
             </button>
             {showUserForm && 
-                <form>
-                    <div className="mb-3">
-                        <label htmlFor="exampleInputEmail1" className="form-label">Email address</label>
-                        <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email"/>
-                            <div id="emailHelp" className="form-text">We'll never share your email with anyone else.</div>
-                    </div>
+                <form onSubmit={(event) => addUser(event)}>
+                    {Object.keys(user).map(field => {
+                        if (field === 'id' || field === 'address' || field === 'company') return;
+                        return (
+                            <div className="mb-3" key={field}>
+                            <label htmlFor={field} className="form-label">{field}</label>
+                            <input type="text" 
+                            className="form-control" 
+                            id={field}
+                            required
+                            value={user[field as keyof Omit<IUser, 'id' | 'address' | 'company'>]}
+                            onChange={(event) => onChange(event)}/>
+                        </div>
+                        )
+                    }
+                    )}
+                    
                 
                     <button type="submit" className="btn btn-primary">Add</button>
               </form>
@@ -58,8 +80,8 @@ const Users: FC = () => {
                                 <div className="card-body">
                                     <h5 className="card-title">{`№${user.id} - ${user.name}`}</h5>
                                     <p className="card-text">Email: {user.email}</p>
-                                    <p className="card-text">City: {user.address.city}</p>
-                                    <p className="card-text">Company: {user.company.name}</p>
+                                    <p className="card-text">Phone: {user.phone}</p>
+                                    <p className="card-text">Website: {user.website}</p>
                                 </div>
                                 <div className="card-footer">
                                     <button className="btn btn-danger"
