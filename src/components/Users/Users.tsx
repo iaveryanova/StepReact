@@ -22,7 +22,7 @@ useEffect(() => {
 
 
   const getUsers = async () => {
-    console.log('function getusers work');
+    console.log('function getUsers work');
     try {
         const users = await http.get('users');
         setUsers(users.data);
