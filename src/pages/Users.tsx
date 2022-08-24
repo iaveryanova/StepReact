@@ -1,16 +1,11 @@
-import React, {
-  FC,
-  useMemo,
-  useState,
-  useEffect,
-} from 'react';
+import React, { FC, useMemo, useState, useEffect } from 'react';
 import { IUser } from '../components/Users/IUser';
 import http from '../http';
 import UserCards from '../components/Users/UserCards';
 import UserAddForm from '../components/Users/UserAddForm';
+import { useSearch } from '../hooks/useSearch';
 
 const Users: FC = () => {
-
   const [users, setUsers] = useState<IUser[]>([]);
   const [search, setSearch] = useState('');
   const [showUserForm, setShowUserForm] = useState(false);
@@ -25,7 +20,6 @@ const Users: FC = () => {
   // if in useEffect used return - unmount
 
   const getUsers = async () => {
-    console.log('function getUsers work');
     try {
       const users = await http.get('users');
       setUsers(users.data);
@@ -45,15 +39,8 @@ const Users: FC = () => {
     }
   };
 
-  const searchedUsers = useMemo(() => {
-    if (search) {
-      return users.filter((user) =>
-        user.name.toLowerCase().includes(search.toLowerCase())
-      );
-    }
-    return users;
-  }, [search, users]);
- 
+  const searchedUsers = useSearch(users, "email", search);
+
   return (
     <>
       <div className='input-group mb-3'>
@@ -76,10 +63,8 @@ const Users: FC = () => {
       >
         Add New User
       </button>
-      {showUserForm && (
-       <UserAddForm setUsers={setUsers} users={users}/>
-      )}
-      <UserCards users={searchedUsers} deleteUser={deleteUser}/>
+      {showUserForm && <UserAddForm setUsers={setUsers} users={users} />}
+      <UserCards users={searchedUsers} deleteUser={deleteUser} />
     </>
   );
 };
