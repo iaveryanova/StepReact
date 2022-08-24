@@ -1,4 +1,11 @@
-import React, { ChangeEvent, FC, useMemo, useState, FormEvent, useEffect } from 'react';
+import React, {
+  ChangeEvent,
+  FC,
+  useMemo,
+  useState,
+  FormEvent,
+  useEffect,
+} from 'react';
 import { IUser } from './IUser';
 import { initialUser } from './initialUser';
 import Loader from '../Loader';
@@ -10,33 +17,36 @@ const Users: FC = () => {
   const [search, setSearch] = useState('');
   const [showUserForm, setShowUserForm] = useState(false);
 
-useEffect(() => {
+  useEffect(() => {
     getUsers();
-}, []);
+  }, []);
 
-
-// if deps not used rerender on every change state
-// if deps empty - rerender at firsr load
-// if deps state - rerender onChange this state
-// if in useEffect used return - unmount
-
+  // if deps not used rerender on every change state
+  // if deps empty - rerender at firsr load
+  // if deps state - rerender onChange this state
+  // if in useEffect used return - unmount
 
   const getUsers = async () => {
     console.log('function getUsers work');
     try {
-        const users = await http.get('users');
-        setUsers(users.data);
+      const users = await http.get('users');
+      setUsers(users.data);
     } catch (e) {
-        console.log(e);
-    }
-  }
-
-  const deleteUser = (id: number) => {
-    const isDelete = window.confirm('Do you really delete this user?');
-    if (isDelete) {
-      setUsers(users.filter((user) => user.id !== id));
+      console.log(e);
     }
   };
+
+  const deleteUser = async (id: number) => {
+    const isDelete = window.confirm('Do you really delete this user?');
+    if (isDelete) {
+      const deletedUser = await http.delete(`users/${id}`);
+      console.log(deletedUser);
+      if (deletedUser.status === 200) {
+        setUsers(users.filter((user) => user.id !== id));
+      }
+    }
+  };
+
   const searchedUsers = useMemo(() => {
     if (search) {
       return users.filter((user) =>
@@ -54,15 +64,14 @@ useEffect(() => {
   const addUser = async (event: FormEvent) => {
     event.preventDefault();
     try {
-        const addedUser = await http.post('users', user);
-        if (addedUser.data) {
-            setUsers([...users, user]);
-            setUser(initialUser);
-        }
+      const addedUser = await http.post('users', user);
+      if (addedUser.data) {
+        setUsers([...users, user]);
+        setUser(initialUser);
+      }
     } catch (e) {
-        console.log(e);
+      console.log(e);
     }
-    
   };
   return (
     <>
@@ -89,7 +98,8 @@ useEffect(() => {
       {showUserForm && (
         <form onSubmit={(event) => addUser(event)}>
           {Object.keys(user).map((field) => {
-            if (field === 'id' || field === 'address' || field === 'company') return null;
+            if (field === 'id' || field === 'address' || field === 'company')
+              return null;
             return (
               <div className='mb-3' key={field}>
                 <label htmlFor={field} className='form-label'>
