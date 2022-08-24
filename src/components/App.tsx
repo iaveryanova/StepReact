@@ -1,5 +1,5 @@
 import React from 'react';
-import Users from './Users/Users';
+import Users from '../pages/Users';
 import './App.css';
 
 
