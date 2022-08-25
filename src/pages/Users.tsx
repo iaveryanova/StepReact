@@ -14,10 +14,6 @@ const Users: FC = () => {
     getUsers();
   }, []);
 
-  // if deps not used rerender on every change state
-  // if deps empty - rerender at firsr load
-  // if deps state - rerender onChange this state
-  // if in useEffect used return - unmount
 
   const getUsers = async () => {
     try {
