@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/StepReact/static/css/main.964fdded.css",
+    "main.js": "/StepReact/static/js/main.ff6218b4.js",
+    "index.html": "/StepReact/index.html",
+    "main.964fdded.css.map": "/StepReact/static/css/main.964fdded.css.map",
+    "main.ff6218b4.js.map": "/StepReact/static/js/main.ff6218b4.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.964fdded.css",
+    "static/js/main.ff6218b4.js"
+  ]
+}
