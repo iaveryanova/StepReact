@@ -6,8 +6,7 @@ export interface UserState {
 
 
 export enum UserActionType {
-    GET_USERS = 'GET_USERS',
-    DELETE_USER = 'DELETE_USER'
+    GET_USERS = 'GET_USERS'
 }
 
 interface GetUsersAction {
@@ -15,9 +14,4 @@ interface GetUsersAction {
     payload:IUser[]
 }
 
-interface DeleteUserAction {
-    type: UserActionType.DELETE_USER
-    payload: {id: number}
-  }
-
-export type UsersAction = GetUsersAction | DeleteUserAction
+export type UsersAction = GetUsersAction

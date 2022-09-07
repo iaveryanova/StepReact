@@ -55,7 +55,7 @@ const Users: FC = () => {
         Add New User
       </button>
       {/* {showUserForm && <UserAddForm setUsers={setUsers} users={users} />} */}
-      <UserCards />
+      <UserCards users={searchedUsers} deleteUser={deleteUser} />
     </>
   );
 };
